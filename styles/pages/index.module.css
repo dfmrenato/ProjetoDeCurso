@@ -2,7 +2,7 @@
     display: flex;
     flex-direction: column;
     flex-grow: 1;
-    overflow: scroll;
+    overflow: hidden;
     scroll-snap-type: y mandatory;
     scroll-behavior: smooth;
 
