@@ -2,8 +2,11 @@ import Button from "@/components/Button";
 import Header from "@/components/Header";
 import MainLayout from "@/layout/MainLayout";
 import styles from "@/styles/pages/login.module.css";
+import Tippy from "@tippyjs/react";
 import Head from "next/head";
+import { set } from "nprogress";
 import { useState } from "react";
+import Popup from "reactjs-popup";
 
 const Options = {
   REGISTER: 1,
@@ -12,6 +15,7 @@ const Options = {
 
 export default function Login() {
   const [selectedOption, setSelectedOption] = useState(Options.REGISTER);
+  const [popupData, setPopupData] = useState(undefined);
 
   /**
    * @param {FormDataEvent} e 
@@ -22,7 +26,7 @@ export default function Login() {
       const formData = new FormData(e.target);
       const data = Object.fromEntries(formData.entries());
 
-      const response = await fetch('/api/sell', {
+      const response = await fetch('/api/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data),
@@ -31,16 +35,18 @@ export default function Login() {
       const result = await response.json();
 
       if (response.ok) {
-        setPaymentData(result);
-        setCurrentStep('payment');
-        startPaymentPolling(result.paymentId);
+        
       } else {
-        setError(result.message || 'Erro ao processar compra');
+        setPopupData(<>
+          <h2>Erro ao efetuar login</h2>
+          <p>{result.message || 'Ocorreu um erro ao tentar efetuar login. Tente novamente.'}</p>
+        </>);
       }
     } catch (err) {
-      setError('Erro de conexão. Tente novamente.');
-    } finally {
-      setLoading(false);
+      setPopupData(<>
+        <h2>Erro ao efetuar login</h2>
+        <p>{err.message || 'Ocorreu um erro ao tentar efetuar login. Tente novamente.'}</p>
+      </>);
     }
   };
 
@@ -101,7 +107,7 @@ export default function Login() {
           {selectedOption == Options.REGISTER ?
             <div className={styles.form}>
               <h1>Criar uma nova conta</h1>
-              <form id="RegistroFormulario">
+              <form id="RegistroFormulario" onSubmit={handleRegisterFormSubmit}>
                 <label htmlFor="NomeR">Nome</label>
                 <input type="text" id="NomeR" name="nome" placeholder="Ovídio Antoninho Marques" required />
 
@@ -118,14 +124,16 @@ export default function Login() {
 
                 <footer>
                   <Button hierarchy={3} type="reset">Limpar dados</Button>
-                  <Button type="submit">Realizar cadastro</Button>
+                  <Tippy content="Ao clicar em 'Realizar cadastro', você concorda com nossos Termos de Serviço e Política de Privacidade." placement="top" arrow={true} interactive={true}>
+                    <Button type="submit">Realizar cadastro</Button>
+                  </Tippy>
                 </footer>
               </form>
             </div>
             :
             <div className={styles.form}>
               <h1>Entrar na sua conta</h1>
-              <form id="LoginFormulario">
+              <form id="LoginFormulario" onSubmit={handleLoginFormSubmit}>
                 <label htmlFor="EmailL">E-mail</label>
                 <input type="email" id="EmailL" name="email" placeholder="fulano@email.com" required />
 
@@ -139,6 +147,12 @@ export default function Login() {
                 </footer>
               </form>
             </div>
+          }
+
+          {popupData &&
+            <Popup modal nested open={true} onClose={() => setPopupData(undefined)}>
+              {close => { return popupData }}
+            </Popup>
           }
 
         </main>
