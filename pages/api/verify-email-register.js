@@ -14,7 +14,7 @@ const dbName = 'businesspro';
  * @param {string} [template] - Template EmailJS
  */
 async function sendEmail(email="undefined", subject="Assunto", message="Mensagem", name="Hermes", template="template_8qj7bar") {
-    if(destinatario=="undefined") return false;
+    if(email=="undefined") return false;
     return await send('service_mr1z653', template, {
         subject,
         message,

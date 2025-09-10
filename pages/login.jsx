@@ -39,7 +39,7 @@ export default function Login() {
       } else {
         setPopupData(<>
           <h2>Erro ao efetuar login</h2>
-          <p>{result.message || 'Ocorreu um erro ao tentar efetuar login. Tente novamente.'}</p>
+          <p>{result.error_message || 'Ocorreu um erro ao tentar efetuar login. Tente novamente.'}</p>
         </>);
       }
     } catch (err) {
@@ -59,7 +59,7 @@ export default function Login() {
       const formData = new FormData(e.target);
       const data = Object.fromEntries(formData.entries());
 
-      const response = await fetch('/api/sell', {
+      const response = await fetch('/api/verify-email-register', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data),
@@ -68,16 +68,19 @@ export default function Login() {
       const result = await response.json();
 
       if (response.ok) {
-        setPaymentData(result);
-        setCurrentStep('payment');
-        startPaymentPolling(result.paymentId);
+        typeof window !== 'undefined' && sessionStorage.setItem('VerificacaoEmail', data.email);
+        location.replace('./verify');
       } else {
-        setError(result.message || 'Erro ao processar compra');
+        setPopupData(<>
+          <h2>Erro ao efetuar cadastro</h2>
+          <p>{result.error_message || 'Ocorreu um erro ao tentar efetuar cadastro. Tente novamente.'}</p>
+        </>);
       }
     } catch (err) {
-      setError('Erro de conexão. Tente novamente.');
-    } finally {
-      setLoading(false);
+      setPopupData(<>
+        <h2>Erro ao efetuar cadastro</h2>
+        <p>{err.message || 'Ocorreu um erro ao tentar efetuar cadastro. Tente novamente.'}</p>
+      </>);
     }
   };
 
@@ -121,6 +124,7 @@ export default function Login() {
                 <input type="password" id="SenhaR" name="senha" placeholder="****" required />
 
                 <input type="hidden" name="tipo" value="empresarial" />
+                <input type="hidden" name="data_criacao" value={new Date().toISOString()} />
 
                 <footer>
                   <Button hierarchy={3} type="reset">Limpar dados</Button>
@@ -140,7 +144,6 @@ export default function Login() {
                 <label htmlFor="SenhaL">Senha</label>
                 <input type="password" id="SenhaL" name="senha" placeholder="****" required />
 
-                <input type="hidden" name="tipo" value="login" />
                 <footer>
                   <Button hierarchy={3}>Esqueci minha senha</Button>
                   <Button type="submit">Realizar cadastro</Button>
