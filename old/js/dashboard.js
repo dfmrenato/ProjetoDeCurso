@@ -85,7 +85,7 @@ document.getElementById('AdicionarFuncionario').addEventListener('submit', async
 
         const data = await response.json();
         
-        if(data.error_message) return Notificar(`Erro de cadastro`, `${data.error_message}`, 'OK');
+        if(data.errorMessage) return Notificar(`Erro de cadastro`, `${data.errorMessage}`, 'OK');
 
         if (!response.ok) {
             throw new Error('Falha na solicitação');
@@ -117,7 +117,7 @@ async function obterFuncionarios(filtrar=false, filtro_tipo="", filtro_valor="")
 
         const data = await response.json();
 
-        if(data.error_message) Notificar(`Erro de requisição de funcionários`, `${data.error_message}`, 'OK');
+        if(data.errorMessage) Notificar(`Erro de requisição de funcionários`, `${data.errorMessage}`, 'OK');
 
         if (!response.ok) {
             throw new Error('Falha na solicitação');
@@ -208,7 +208,7 @@ document.getElementById("CancelarProdutoBotao").addEventListener('click', (event
 
         const data = await response.json();
 
-        if(data.error_message) return;
+        if(data.errorMessage) return;
 
         if (!response.ok) {
             throw new Error('Falha na solicitação');
@@ -245,7 +245,7 @@ document.getElementById('GeminiFormulario').addEventListener('submit', async (ev
 
         const data = await response.json();
 
-        if(data.error_message) return Notificar(`Erro ao enviar mensagem`, `${data.error_message}`, 'OK');
+        if(data.errorMessage) return Notificar(`Erro ao enviar mensagem`, `${data.errorMessage}`, 'OK');
 
         if (!response.ok) {
             throw new Error('Falha na solicitação');

@@ -18,7 +18,7 @@ export default async function handler(req, res) {
     return res.status(201).json({ funcionarios: (await retorno.toArray()) });
   } catch (error) {
     console.error('Erro ao obter funcionários:', error);
-    res.status(500).json({ error_message: error.message });
+    res.status(500).json({ errorMessage: error.message });
   } finally {
     await client.close();
   }

@@ -44,14 +44,14 @@ export default async function handler(req, res) {
 
   try {
     if (!nome || !empresa || !email || !senha || !data_criacao) {
-      return res.status(400).json({ error_message: 'Nome, empresa, email e senha são obrigatórios' });
+      return res.status(400).json({ errorMessage: 'Nome, empresa, email e senha são obrigatórios' });
     }
 
     const usersCollection = client.db(dbName).collection('temporario');
 
     // Verifica se o e-mail ou empresa já existe no banco de dados
     if (await client.db(dbName).collection('funcionarios').findOne({ email }) || await client.db(dbName).collection('usuarios').findOne({ email }) || await client.db(dbName).collection('usuarios').findOne({ empresa })) {
-      return res.status(409).json({ error_message: 'Já existe uma conta com este e-mail ou empresa. Tente fazer login ou alterá-los.' }); // Código 409 = Conflito
+      return res.status(409).json({ errorMessage: 'Já existe uma conta com este e-mail ou empresa. Tente fazer login ou alterá-los.' }); // Código 409 = Conflito
     }
 
     // Verifica se o e-mail ou empresa já existe aguardando
@@ -80,7 +80,7 @@ export default async function handler(req, res) {
 
   } catch (error) {
     console.error('Erro ao adicionar usuário:', error);
-    res.status(500).json({ error_message: error.message });
+    res.status(500).json({ errorMessage: error.message });
   } finally {
     await client.close();
   }

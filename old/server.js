@@ -65,19 +65,19 @@ app.get('/', (req, res) => {
 });
 
 // Rota para adicionar um usuário (início da verificação do email)
-app.post('/verify-email-register', async (req, res) => {
+app.post('/register-email', async (req, res) => {
     const { nome, empresa, email, senha, data_criacao } = req.body;
 
     try {
         if (!nome || !empresa || !email || !senha || !data_criacao) {
-            return res.status(400).json({ error_message: 'Nome, empresa, email e senha são obrigatórios' });
+            return res.status(400).json({ errorMessage: 'Nome, empresa, email e senha são obrigatórios' });
         }
 
         const usersCollection = db.collection('temporario');
 
         // Verifica se o e-mail ou empresa já existe no banco de dados
         if (await db.collection('funcionarios').findOne({ email }) || await db.collection('usuarios').findOne({ email }) || await db.collection('usuarios').findOne({ empresa })) {
-            return res.status(409).json({ error_message: 'Já existe uma conta com este e-mail ou empresa. Tente fazer login ou alterá-los.' }); // Código 409 = Conflito
+            return res.status(409).json({ errorMessage: 'Já existe uma conta com este e-mail ou empresa. Tente fazer login ou alterá-los.' }); // Código 409 = Conflito
         }
 
         // Verifica se o e-mail ou empresa já existe aguardando
@@ -106,12 +106,12 @@ app.post('/verify-email-register', async (req, res) => {
 
     } catch (error) {
         console.error('Erro ao adicionar usuário:', error);
-        res.status(500).json({ error_message: error.message });
+        res.status(500).json({ errorMessage: error.message });
     }
 });
 
 // Rota para adicionar um usuário (verificação bem sucedida)
-app.post('/verify-email-success', async (req, res) => {
+app.post('/verify-email', async (req, res) => {
     const { email, codigo } = req.body;
     const temporario_tipo = "conta";
 
@@ -125,7 +125,7 @@ app.post('/verify-email-success', async (req, res) => {
     
             // Verifica se o e-mail ou empresa já existe no banco de dados
             if (await db.collection('funcionarios').findOne({ email }) || await usersCollection.findOne({ email }) || await usersCollection.findOne({ empresa: (await usuario).empresa })) {
-                return res.status(409).json({ error_message: 'Já existe uma conta com este e-mail ou empresa. Tente fazer login ou alterá-los.' }); // Código 409 = Conflito
+                return res.status(409).json({ errorMessage: 'Já existe uma conta com este e-mail ou empresa. Tente fazer login ou alterá-los.' }); // Código 409 = Conflito
             }
             
             const newUser = {
@@ -151,11 +151,11 @@ app.post('/verify-email-success', async (req, res) => {
     
         } catch (error) {
             console.error('Erro ao adicionar usuário:', error);
-            res.status(500).json({ error_message: error.message });
+            res.status(500).json({ errorMessage: error.message });
         }
 
     } else {
-        return res.status(404).json({ error_message: 'Código de verificação incorreto ou expirado.' });
+        return res.status(404).json({ errorMessage: 'Código de verificação incorreto ou expirado.' });
     };
 
 });
@@ -166,7 +166,7 @@ app.post('/login', async (req, res) => {
 
     try {
         if (!email || !senha) {
-            return res.status(400).json({ error_message: 'Email e senha são obrigatórios' });
+            return res.status(400).json({ errorMessage: 'Email e senha são obrigatórios' });
         }
 
         const usersCollection = db.collection('usuarios');
@@ -178,16 +178,16 @@ app.post('/login', async (req, res) => {
                 console.log('Usuário logado:', email);
                 return res.status(201).json({ email: email, nome: existingUser.nome, empresa: existingUser.empresa});
             } else {
-                return res.status(409).json({ error_message: 'Senha incorreta para o e-mail informado.' });
+                return res.status(409).json({ errorMessage: 'Senha incorreta para o e-mail informado.' });
             }
 
         } else {
-            return res.status(404).json({ error_message: 'E-mail incorreto ou conta não cadastrada.' });
+            return res.status(404).json({ errorMessage: 'E-mail incorreto ou conta não cadastrada.' });
         }
         
     } catch (error) {
         console.error('Erro ao fazer login:', error);
-        res.status(500).json({ error_message: error.message });
+        res.status(500).json({ errorMessage: error.message });
     }
 });
 
@@ -203,7 +203,7 @@ app.post('/obter-funcionarios', async (req, res) => {
     } catch (error) {
 
         console.error('Erro ao obter funcionários:', error);
-        res.status(500).json({ error_message: error.message });
+        res.status(500).json({ errorMessage: error.message });
 
     };
 
@@ -215,14 +215,14 @@ app.post('/add-funcionario', async (req, res) => {
 
     try {
         if (!nome || !empresa || !email || !senha || !funcao || !data_criacao) {
-            return res.status(400).json({ error_message: 'Nome, empresa, email, função, data de criação e senha são obrigatórios' });
+            return res.status(400).json({ errorMessage: 'Nome, empresa, email, função, data de criação e senha são obrigatórios' });
         }
 
         const usersCollection = db.collection('funcionarios');
 
         // Verifica se o e-mail ou empresa já existe no banco de dados
         if (await usersCollection.findOne({ email, empresa })) {
-            return res.status(409).json({ error_message: 'Já existe um funcionário com esse e-mail na sua empresa.' }); // Código 409 = Conflito
+            return res.status(409).json({ errorMessage: 'Já existe um funcionário com esse e-mail na sua empresa.' }); // Código 409 = Conflito
         }
 
         const newUser = { nome, email, senha, empresa, funcao, data_criacao };
@@ -233,7 +233,7 @@ app.post('/add-funcionario', async (req, res) => {
 
     } catch (error) {
         console.error('Erro ao adicionar funcionário:', error);
-        res.status(500).json({ error_message: error.message });
+        res.status(500).json({ errorMessage: error.message });
     }
 });
 
@@ -254,7 +254,7 @@ app.post('/gemini-perguntar', async (req, res) => {
         res.status(201).json({resposta: response.text});
     } catch (error) {
         console.error('Erro ao perguntar ao Gemini:', error);
-        return res.status(500).json({ error_message: 'Erro ao perguntar ao Gemini.' });
+        return res.status(500).json({ errorMessage: 'Erro ao perguntar ao Gemini.' });
     }
 
 });

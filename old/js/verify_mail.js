@@ -22,7 +22,7 @@ document.getElementById('FormularioVerificarEmail').addEventListener('submit', a
 
         const data = await response.json();
         
-        if(data.error_message) return Notificar(`Erro de verificação`, `${data.error_message}`, 'OK');
+        if(data.errorMessage) return Notificar(`Erro de verificação`, `${data.errorMessage}`, 'OK');
 
         if (!response.ok) {
             throw new Error('Falha na solicitação');

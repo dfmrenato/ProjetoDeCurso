@@ -20,7 +20,7 @@ export default async function handler(req, res) {
     res.status(201).json({ resposta: response.text });
   } catch (error) {
     console.error('Erro ao perguntar ao Gemini:', error);
-    return res.status(500).json({ error_message: 'Erro ao perguntar ao Gemini.' });
+    return res.status(500).json({ errorMessage: 'Erro ao perguntar ao Gemini.' });
   }
 
 }

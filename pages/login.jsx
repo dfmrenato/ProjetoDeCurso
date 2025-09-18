@@ -39,7 +39,7 @@ export default function Login() {
       } else {
         setPopupData(<>
           <h2>Erro ao efetuar login</h2>
-          <p>{result.error_message || 'Ocorreu um erro ao tentar efetuar login. Tente novamente.'}</p>
+          <p>{result.errorMessage || 'Ocorreu um erro ao tentar efetuar login. Tente novamente.'}</p>
         </>);
       }
     } catch (err) {
@@ -59,7 +59,7 @@ export default function Login() {
       const formData = new FormData(e.target);
       const data = Object.fromEntries(formData.entries());
 
-      const response = await fetch('/api/verify-email-register', {
+      const response = await fetch('/api/register-email', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data),
@@ -73,10 +73,11 @@ export default function Login() {
       } else {
         setPopupData(<>
           <h2>Erro ao efetuar cadastro</h2>
-          <p>{result.error_message || 'Ocorreu um erro ao tentar efetuar cadastro. Tente novamente.'}</p>
+          <p>{result.errorMessage || 'Ocorreu um erro ao tentar efetuar cadastro. Tente novamente.'}</p>
         </>);
       }
     } catch (err) {
+      console.error(err);
       setPopupData(<>
         <h2>Erro ao efetuar cadastro</h2>
         <p>{err.message || 'Ocorreu um erro ao tentar efetuar cadastro. Tente novamente.'}</p>

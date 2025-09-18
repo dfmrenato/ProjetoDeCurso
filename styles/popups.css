@@ -1,7 +1,8 @@
 .popup-content {
     margin: auto;
     background: #fff;
-    width: 50%;
+    min-width: 300px;
+    max-width: 90vw;
     padding: 5px;
     border: 1px solid #d7d7d7;
     border-radius: 12px;

@@ -69,7 +69,7 @@ document.getElementById('RegistroFormulario').addEventListener('submit', async (
 
         const data = await response.json();
         
-        if(data.error_message) return Notificar(`Erro de cadastro`, `${data.error_message}`, 'OK');
+        if(data.errorMessage) return Notificar(`Erro de cadastro`, `${data.errorMessage}`, 'OK');
 
         if (!response.ok) {
             throw new Error('Falha na solicitação');
@@ -104,7 +104,7 @@ document.getElementById('LoginFormulario').addEventListener('submit', async (eve
 
         const data = await response.json();
 
-        if(data.error_message) return Notificar(`Erro de login`, `${data.error_message}`, 'OK');
+        if(data.errorMessage) return Notificar(`Erro de login`, `${data.errorMessage}`, 'OK');
 
         if (!response.ok) {
             throw new Error('Falha na solicitação');
